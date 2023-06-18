@@ -8,6 +8,7 @@
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <unistd.h>
 
 typedef uint8_t u8;
@@ -37,19 +38,8 @@ typedef double f64;
 #define COLOR_CYAN 36
 #define COLOR_WHITE 37
 
-void colored(FILE *stream, u32 color, const char *format, ...) {
-    va_list args;
-    va_start(args, format);
-    if (isatty(fileno(stream))) {
-        fprintf(stream, "\033[%dm", color);
-        vfprintf(stream, format, args);
-        fprintf(stream, "\033[0m");
-    } else {
-        vfprintf(stream, format, args);
-    }
-    fprintf(stream, "\n");
-    va_end(args);
-}
+void colored(FILE* stream, u32 color, const char* format, ...);
+int str_eq(const char* const left, const char* const right);
 
 // 使用 ##__VA_ARGS__ 提示编译器把末尾的多于 ',' 删除, 以防止编译报错
 #define ERROR(format, ...)                                           \
@@ -169,5 +159,9 @@ void colored(FILE *stream, u32 color, const char *format, ...) {
         ERROR("%s:%d: Reached unreachable code", __FILE__, __LINE__); \
         exit(1);                                                      \
     } while (0)
+
+#define Array_Len(array) (sizeof(array) / sizeof((array)[0]))
+#define Array_Last(array) ((array) + Array_Len(array) - 1)
+#define Array_First(array) (array[0])
 
 #endif
