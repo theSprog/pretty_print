@@ -46,11 +46,13 @@ void p_green(const char* format, ...);
 void p_yellow(const char* format, ...);
 void p_blue(const char* format, ...);
 void p_cyan(const char* format, ...);
+void p_magenta(const char* format, ...);
 
 int str_eq(const char* const left, const char* const right);
 
 void* kmalloc(size_t size);
-int kopen(const char* filename, int flags, mode_t mode);
+int kopen(const char* filename, int flags, ...);
+FILE* kfopen(const char* filename, const char* mode);
 
 // 使用 ##__VA_ARGS__ 提示编译器把末尾的多于 ',' 删除, 以防止编译报错
 #define ERROR(format, ...)                                             \
