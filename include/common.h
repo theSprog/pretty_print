@@ -4,6 +4,8 @@
 // // 默认是 debug 的, define NDEBUG 则关闭 debug 模式
 // #define NDEBUG
 
+#include <errno.h>
+#include <fcntl.h>
 #include <stdarg.h>
 #include <stdint.h>
 #include <stdio.h>
@@ -38,33 +40,42 @@ typedef double f64;
 #define COLOR_CYAN 36
 #define COLOR_WHITE 37
 
-void colored(FILE* stream, u32 color, const char* format, ...);
+void p_colored(FILE* stream, u32 color, const char* format, ...);
+void p_red(const char* format, ...);
+void p_green(const char* format, ...);
+void p_yellow(const char* format, ...);
+void p_blue(const char* format, ...);
+void p_cyan(const char* format, ...);
+
 int str_eq(const char* const left, const char* const right);
 
+void* kmalloc(size_t size);
+int kopen(const char* filename, int flags, mode_t mode);
+
 // 使用 ##__VA_ARGS__ 提示编译器把末尾的多于 ',' 删除, 以防止编译报错
-#define ERROR(format, ...)                                           \
-    do {                                                             \
-        colored(stderr, COLOR_RED, "[ERROR]" format, ##__VA_ARGS__); \
-    } while (0)
-
-#define WARN(format, ...)                                               \
-    do {                                                                \
-        colored(stderr, COLOR_YELLOW, "[ WARN]" format, ##__VA_ARGS__); \
-    } while (0)
-
-#define INFO(format, ...)                                             \
-    do {                                                              \
-        colored(stdout, COLOR_CYAN, "[ INFO]" format, ##__VA_ARGS__); \
-    } while (0)
-
-#define DEBUG(format, ...)                                             \
+#define ERROR(format, ...)                                             \
     do {                                                               \
-        colored(stdout, COLOR_GREEN, "[DEBUG]" format, ##__VA_ARGS__); \
+        p_colored(stderr, COLOR_RED, "[ERROR]" format, ##__VA_ARGS__); \
     } while (0)
 
-#define TRACE(format, ...)                                            \
-    do {                                                              \
-        colored(stdout, COLOR_BLUE, "[TRACE]" format, ##__VA_ARGS__); \
+#define WARN(format, ...)                                                 \
+    do {                                                                  \
+        p_colored(stderr, COLOR_YELLOW, "[ WARN]" format, ##__VA_ARGS__); \
+    } while (0)
+
+#define INFO(format, ...)                                               \
+    do {                                                                \
+        p_colored(stdout, COLOR_CYAN, "[ INFO]" format, ##__VA_ARGS__); \
+    } while (0)
+
+#define DEBUG(format, ...)                                               \
+    do {                                                                 \
+        p_colored(stdout, COLOR_GREEN, "[DEBUG]" format, ##__VA_ARGS__); \
+    } while (0)
+
+#define TRACE(format, ...)                                              \
+    do {                                                                \
+        p_colored(stdout, COLOR_BLUE, "[TRACE]" format, ##__VA_ARGS__); \
     } while (0)
 
 #define BUF_LEN 128
